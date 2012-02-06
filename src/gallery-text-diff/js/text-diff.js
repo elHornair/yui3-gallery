@@ -1,6 +1,15 @@
 /*jslint white: true, onevar: true, undef: true, newcap: true, regexp: true, plusplus: true, bitwise: true, maxerr: 50, indent: 4, browser: true, nomen: true */
 /*global window, navigator, YUI */
 
+/*
+ * Copyright (c) 2012 Alain Horner. All rights reserved.
+ *
+ * This component helps you to calculate the difference between two strings using the Damerau-Levenshtein algorithm.
+ * It is able to tell you how many actions (deletion, insertion, substitution, transposition) would be neccessary to
+ * transform one string into the other. In addition to that, it calculates a diff-string, that tells you at what positions
+ * of the string, the actions would have to take place. The characters used for the different actions are configurable
+ *
+ */
 YUI.add('text-diff', function (Y) {
 
     'use strict';
@@ -42,6 +51,13 @@ YUI.add('text-diff', function (Y) {
         /*********************************** private methods ************************************/
         /****************************************************************************************/
 
+        /**
+         * Creates a string of variable length, that consists of one kind of character
+         *
+         * @param {Char} letter     The character the string consists of
+         * @param {Number} length   The length of the string
+         * @return {String}
+         **/
         _constructSingleCharString: function(letter, length) {
             var singleCharString = '',
                 i;
@@ -57,6 +73,15 @@ YUI.add('text-diff', function (Y) {
         /************************************ public methods ************************************/
         /****************************************************************************************/
 
+        /**
+         * Calculates the diff between two strings
+         *
+         * @param {String} targetStr    The target string
+         * @param {String} compStr      The comparison string
+         * @return {Object}             An object with two properties:
+         *                              - {String}  diffString  A string describing the difference between the two given strings
+         *                              - {Number}  dist        The Damerau-Levenshtein distance which can be interpreted as the amount of differences
+         **/
         calculateDiff: function(targetStr, compStr) {
             var instance = this,
                 targetArray = null,
@@ -69,19 +94,16 @@ YUI.add('text-diff', function (Y) {
             // trivial cases
             if (targetStr === compStr) {
                 return {
-                    diffMatrix: null,
                     diffString: this._constructSingleCharString(this.get('complianceChar'), targetStr.length),
                     dist: 0
                 }
             } else if (compStr.length === 0) {
                 return {
-                    diffMatrix: null,
                     diffString: this._constructSingleCharString(this.get('insertionChar'), targetStr.length),
                     dist: targetStr.length
                 }
             } else if (targetStr.length === 0) {
                 return {
-                    diffMatrix: null,
                     diffString: this._constructSingleCharString(this.get('deletionChar'), compStr.length),
                     dist: compStr.length
                 }
@@ -109,10 +131,13 @@ YUI.add('text-diff', function (Y) {
             Y.Array.each(compArray, function (compChar, i) {
                 Y.Array.each(targetArray, function (targetChar, j) {
                     if (compArray[i] === targetArray[j]) {
+
+                        // compliance
                         diffMatrix[i+1][j+1] = {
                             dist: diffMatrix[i][j]['dist'],
                             diff: diffMatrix[i][j]['diff'] + instance.get('complianceChar')
                         }
+
                     } else {
 
                         // deletion
@@ -152,7 +177,6 @@ YUI.add('text-diff', function (Y) {
             });
 
             return {
-                diffMatrix: diffMatrix,
                 diffString: diffMatrix[compStr.length][targetStr.length]['diff'],
                 dist: diffMatrix[compStr.length][targetStr.length]['dist']
             }
