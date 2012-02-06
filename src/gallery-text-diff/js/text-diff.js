@@ -42,12 +42,12 @@ YUI.add('text-diff', function (Y) {
         /*********************************** private methods ************************************/
         /****************************************************************************************/
 
-        _constructSingleCharString: function(char, length) {
+        _constructSingleCharString: function(letter, length) {
             var singleCharString = '',
                 i;
 
             for (i = 0; i < length; i++) {
-                singleCharString += char;
+                singleCharString += letter;
             }
 
             return singleCharString;
