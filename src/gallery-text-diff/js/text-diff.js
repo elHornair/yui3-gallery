@@ -1,6 +1,3 @@
-/*jslint white: true, onevar: true, undef: true, newcap: true, regexp: true, plusplus: true, bitwise: true, maxerr: 50, indent: 4, browser: true, nomen: true */
-/*global window, navigator, YUI */
-
 /*
  * Copyright (c) 2012 Alain Horner. All rights reserved.
  *
@@ -30,7 +27,7 @@ Y.TextDiff = Y.Base.create('TextDiff', Y.Base, [], {
      * @param {Number} length   The length of the string
      * @return {String}
      **/
-    _constructSingleCharString: function(letter, length) {
+    _constructSingleCharString: function (letter, length) {
         var singleCharString = '',
             i;
 
@@ -54,7 +51,7 @@ Y.TextDiff = Y.Base.create('TextDiff', Y.Base, [], {
      *                              - {String}  diffString  A string describing the difference between the two given strings
      *                              - {Number}  dist        The Damerau-Levenshtein distance which can be interpreted as the amount of differences
      **/
-    calculateDiff: function(targetStr, compStr) {
+    calculateDiff: function (targetStr, compStr) {
         var instance = this,
             targetArray = null,
             compArray = null,
@@ -68,17 +65,17 @@ Y.TextDiff = Y.Base.create('TextDiff', Y.Base, [], {
             return {
                 diffString: this._constructSingleCharString(this.get('complianceChar'), targetStr.length),
                 dist: 0
-            }
+            };
         } else if (compStr.length === 0) {
             return {
                 diffString: this._constructSingleCharString(this.get('insertionChar'), targetStr.length),
                 dist: targetStr.length
-            }
+            };
         } else if (targetStr.length === 0) {
             return {
                 diffString: this._constructSingleCharString(this.get('deletionChar'), compStr.length),
                 dist: compStr.length
-            }
+            };
         }
 
         // prepare matrix and comparison-vectors
@@ -96,7 +93,7 @@ Y.TextDiff = Y.Base.create('TextDiff', Y.Base, [], {
             diffMatrix[0][j] = {
                 dist: j,
                 diff: this._constructSingleCharString(this.get('insertionChar'), j)
-            }
+            };
         }
 
         // calculate difference
@@ -105,53 +102,53 @@ Y.TextDiff = Y.Base.create('TextDiff', Y.Base, [], {
                 if (compArray[i] === targetArray[j]) {
 
                     // compliance
-                    diffMatrix[i+1][j+1] = {
-                        dist: diffMatrix[i][j]['dist'],
-                        diff: diffMatrix[i][j]['diff'] + instance.get('complianceChar')
-                    }
+                    diffMatrix[i + 1][j + 1] = {
+                        dist: diffMatrix[i][j].dist,
+                        diff: diffMatrix[i][j].diff + instance.get('complianceChar')
+                    };
 
                 } else {
 
                     // deletion
                     minObj = {
-                        dist: diffMatrix[i][j+1]['dist'] + 1,
-                        diff: diffMatrix[i][j+1]['diff'] + instance.get('deletionChar')
+                        dist: diffMatrix[i][j + 1].dist + 1,
+                        diff: diffMatrix[i][j + 1].diff + instance.get('deletionChar')
                     };
 
                     // insertion
-                    if (diffMatrix[i+1][j]['dist'] < minObj['dist']) {
+                    if (diffMatrix[i + 1][j].dist < minObj.dist) {
                         minObj = {
-                            dist: diffMatrix[i+1][j]['dist'] + 1,
-                            diff: diffMatrix[i+1][j]['diff'] + instance.get('insertionChar')
+                            dist: diffMatrix[i + 1][j].dist + 1,
+                            diff: diffMatrix[i + 1][j].diff + instance.get('insertionChar')
                         };
                     }
 
                     // substitution
-                    if (diffMatrix[i][j]['dist'] < minObj['dist']) {
+                    if (diffMatrix[i][j].dist < minObj.dist) {
                         minObj = {
-                            dist: diffMatrix[i][j]['dist'] + 1,
-                            diff: diffMatrix[i][j]['diff'] + instance.get('substitutionChar')
+                            dist: diffMatrix[i][j].dist + 1,
+                            diff: diffMatrix[i][j].diff + instance.get('substitutionChar')
                         };
                     }
 
                     // transposition
-                    if(i > 0 && j > 0 && compChar == targetArray[j-1] && targetChar == compArray[i-1] && diffMatrix[i-1][j-1]['dist'] < minObj['dist']) {
+                    if (i > 0 && j > 0 && compChar === targetArray[j - 1] && targetChar === compArray[i - 1] && diffMatrix[i - 1][j - 1].dist < minObj.dist) {
                         minObj = {
-                            dist: diffMatrix[i-1][j-1]['dist'] + 1,
-                            diff: diffMatrix[i-1][j-1]['diff'] + instance.get('transpositionChar') + instance.get('transpositionChar')
+                            dist: diffMatrix[i - 1][j - 1].dist + 1,
+                            diff: diffMatrix[i - 1][j - 1].diff + instance.get('transpositionChar') + instance.get('transpositionChar')
                         };
                     }
 
-                    diffMatrix[i+1][j+1] = minObj;
+                    diffMatrix[i + 1][j + 1] = minObj;
 
                 }
             });
         });
 
         return {
-            diffString: diffMatrix[compStr.length][targetStr.length]['diff'],
-            dist: diffMatrix[compStr.length][targetStr.length]['dist']
-        }
+            diffString: diffMatrix[compStr.length][targetStr.length].diff,
+            dist: diffMatrix[compStr.length][targetStr.length].dist
+        };
 
     }
 
