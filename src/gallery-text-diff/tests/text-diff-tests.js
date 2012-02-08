@@ -46,7 +46,7 @@ YUI.add('text-diff-tests', function(Y) {
 
             diffObj = this.textDiffComponent.calculateDiff('kitten', 'sitti');
 
-            Y.Assert.areEqual(diffObj.diffString, 's___is');
+            Y.Assert.areEqual(diffObj.diffString, 's___si');
             Y.Assert.areEqual(diffObj.dist, 3);
         },
 
@@ -80,7 +80,7 @@ YUI.add('text-diff-tests', function(Y) {
 
             diffObj = this.textDiffComponent.calculateDiff('kitten', 'wiktten');
 
-            Y.Assert.areEqual(diffObj.diffString, 'dtt____');
+            Y.Assert.areEqual(diffObj.diffString, 's_d____');
             Y.Assert.areEqual(diffObj.dist, 2);
         },
 

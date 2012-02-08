@@ -116,7 +116,7 @@ Y.TextDiff = Y.Base.create('TextDiff', Y.Base, [], {
                     };
 
                     // insertion
-                    if (diffMatrix[i + 1][j].dist < minObj.dist) {
+                    if (diffMatrix[i + 1][j].dist + 1 < minObj.dist) {
                         minObj = {
                             dist: diffMatrix[i + 1][j].dist + 1,
                             diff: diffMatrix[i + 1][j].diff + instance.get('insertionChar')
@@ -124,7 +124,7 @@ Y.TextDiff = Y.Base.create('TextDiff', Y.Base, [], {
                     }
 
                     // substitution
-                    if (diffMatrix[i][j].dist < minObj.dist) {
+                    if (diffMatrix[i][j].dist + 1 < minObj.dist) {
                         minObj = {
                             dist: diffMatrix[i][j].dist + 1,
                             diff: diffMatrix[i][j].diff + instance.get('substitutionChar')
@@ -132,7 +132,7 @@ Y.TextDiff = Y.Base.create('TextDiff', Y.Base, [], {
                     }
 
                     // transposition
-                    if (i > 0 && j > 0 && compChar === targetArray[j - 1] && targetChar === compArray[i - 1] && diffMatrix[i - 1][j - 1].dist < minObj.dist) {
+                    if (i > 0 && j > 0 && compChar === targetArray[j - 1] && targetChar === compArray[i - 1] && diffMatrix[i - 1][j - 1].dist + 1 < minObj.dist) {
                         minObj = {
                             dist: diffMatrix[i - 1][j - 1].dist + 1,
                             diff: diffMatrix[i - 1][j - 1].diff + instance.get('transpositionChar') + instance.get('transpositionChar')
