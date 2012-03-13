@@ -1,4 +1,3 @@
-
  /**
  *  YUI3 Treeview
  *
@@ -126,9 +125,6 @@
             
             classes = target.get("className").split(" ");
             cLength = classes.length;
-            
-            event.preventDefault();
-            
 
             for (i=0;i<cLength;i++) {
                 className = classes[i];
